@@ -7,8 +7,6 @@ let yearForWeekOfYearOffset = 2637
 let arguments = NSProcessInfo.processInfo().arguments
 let appName = (arguments[0] as NSString).lastPathComponent
 let dateString = arguments[1].componentsSeparatedByString("=")[1]
-//print("App: \(appName)")
-//print("Date: \(dateString)")
 
 let gregorianCalendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
 let inDateFormatter = NSDateFormatter()
@@ -41,6 +39,3 @@ if let bisRange = outDateString.rangeOfString("bis") {
 }
 
 print("\(outDateString)")
-
-
-

@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+error_reporting(E_ALL & ~E_NOTICE);
+require(dirname(__FILE__)."/../src/qreki.php");
+
+if (!isset($argv[1])) {
+    exit;
+}
+
+$date_str = explode("=", $argv[1])[1];
+if (!$date_str) {
+    exit;
+}
+
+$date_components = explode("-", $date_str);
+if (count($date_components) != 3) {
+    exit;
+}
+
+list($year, $month, $day) = $date_components;
+list($q_year, $leap, $q_month, $q_day) = calc_kyureki((int)$year, (int)$month, (int)$day);
+
+$result = sprintf("%4d-%02d-%02d", $q_year, $q_month, $q_day);
+if ($leap) {
+    $result .= " L";
+}
+echo $result."\n";

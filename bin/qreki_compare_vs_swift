@@ -1,0 +1,112 @@
+#!/usr/bin/env ruby
+
+require 'colorize'
+
+start_date_str = '2015-01-01'
+end_date_str = '2020-12-31'
+targets = ['ruby', 'php', 'python']
+
+unless ARGV[0].nil?
+  val = ARGV[0].strip
+  if match = val.match(/^\d{4}$/)
+    start_date_str = "#{match[0]}-01-01"
+    end_date_str = "#{match[0]}-12-31"
+  elsif match = val.match(/^(\d{4})\.\.\.(\d{4})$/)
+    start_date_str = "#{match[1]}-01-01"
+    end_date_str = "#{match[2]}-12-31"
+  elsif match = val.match(/^(\d{4}-\d{2}-\d{2})\.\.\.(\d{4}-\d{2}-\d{2})$/)
+    start_date_str = match[1]
+    end_date_str = match[2]
+  elsif match = val.match(/^\d{4}-\d{2}-\d{2}$/)
+    start_date_str = match[0]
+    end_date_str = start_date_str
+  end
+end
+
+unless ARGV[1].nil?
+  input_targets = ARGV[1].strip.split(',')
+  new_targets = []
+
+  targets.each do |target|
+    if input_targets.include? target
+      new_targets << target
+    end
+  end
+
+  targets = new_targets unless new_targets.empty?
+end
+
+begin_date = Date.parse(start_date_str)
+end_date = Date.parse(end_date_str)
+current_date = begin_date
+
+$stdout.sync = true
+successes = []
+errors = []
+all_results = []
+
+until current_date > end_date
+
+  date_string = current_date.strftime('%Y-%m-%d')
+  print "\rProcessing: #{date_string}, Success: #{successes.count}, Error: #{errors.count}".yellow
+
+  outputs = []
+  outputs << "original:#{date_string}"
+  results = []
+
+  if targets.include? 'ruby'
+    require 'qreki'
+    qreki = Qreki.calc_from_date(current_date)
+    rb_result = sprintf('%04d-%02d-%02d', qreki.year, qreki.month, qreki.day)
+    rb_result += ' L' if qreki.uruu
+    outputs << "ruby:#{rb_result}"
+    results << rb_result
+  end
+
+  if targets.include? 'php'
+    php_result = `#{File.expand_path(File.dirname(__FILE__))}/qreki_php -date=#{date_string}`
+    php_result.strip!
+    outputs << "php:#{php_result}"
+    results << php_result
+  end
+
+  if targets.include? 'python'
+    python_result = `#{File.expand_path(File.dirname(__FILE__))}/qreki_py -date=#{date_string}`
+    python_result.strip!
+    outputs << "python:#{python_result}"
+    results << python_result
+  end
+
+  # Swiftは必ず入れる
+  swift_result = `#{File.expand_path(File.dirname(__FILE__))}/qreki_swift -date=#{date_string}`
+  swift_result.strip!
+  outputs << "swift:#{swift_result}"
+  results << swift_result
+
+  output = outputs.join(', ')
+
+  if results.uniq.count == 1
+    successes << output
+    all_results << output.green
+  else
+    errors << output
+    all_results << output.red
+  end
+
+  current_date = current_date.next
+end
+
+# successes.each do |success|
+#   puts success.green
+# end
+#
+# errors.each do |error|
+#   puts error.red
+# end
+
+puts "\r                                                                               "
+all_results.each do |result|
+  puts result
+end
+
+puts "\rSuccess: #{successes.count}, Error: #{errors.count}                                "
