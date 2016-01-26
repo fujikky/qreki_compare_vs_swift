@@ -3,7 +3,7 @@ Foundation の NSCalendar 旧暦(NSCalendarIdentifierChinese)の挙動が怪し�
 rubyと比べるスクリプトを作ってみました。
 
 ## Install
-    $ git clone #{repository}
+    $ git clone git@github.com:fujikky/qreki_compare_ruby_vs_swift.git
     $ bundle install
     $ make # compile swift
 
