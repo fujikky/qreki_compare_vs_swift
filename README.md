@@ -43,7 +43,7 @@ $ make
 
 Test 2001-01-01 ... 2002-12-31 in All languages
 
-    $ bundle exec bin/qreki_compare_vs_swift 2001-2002
+    $ bundle exec bin/qreki_compare_vs_swift 2001...2002
 
 Test 2010-01-01 ... 2010-12-31 in Ruby and Swift
 
