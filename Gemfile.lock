@@ -1,0 +1,12 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    colorize (0.7.7)
+    qreki (0.0.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  colorize
+  qreki

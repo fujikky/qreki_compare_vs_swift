@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+require 'qreki'
+require 'colorize'
+
+start_year = 2015
+end_year = 2020
+if ARGV[0]
+  start_year, end_year = ARGV[0].split('-')
+end
+
+begin_date = Date.parse("#{start_year}-01-01")
+end_date = Date.parse("#{end_year}-12-31")
+current_date = begin_date
+
+$stdout.sync = true
+success_count = 0
+error_count = 0
+errors = []
+
+until current_date > end_date
+  current_date = current_date.next
+
+  qreki = Qreki.calc_from_date(current_date)
+  rb_result = sprintf('%04d-%02d-%02d', qreki.year, qreki.month, qreki.day)
+  rb_result += ' L' if qreki.uruu
+
+  date_string = current_date.strftime('%Y-%m-%d')
+  swift_result = `#{File.expand_path(File.dirname(__FILE__))}/qreki_swift -date=#{date_string}`
+  swift_result.strip!
+
+  output = "original:#{date_string}, ruby:#{rb_result}, swift:#{swift_result}"
+  print "\rProcessing: #{date_string}, Success: #{success_count}, Error: #{error_count}".yellow
+
+  if rb_result == swift_result
+    success_count += 1
+  else
+    error_count += 1
+    errors << output
+  end
+end
+
+puts "\rSuccess: #{success_count}, Error: #{error_count}                                "
+
+unless errors.empty?
+  errors.each do |error|
+    puts error.red
+  end
+end
