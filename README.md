@@ -11,23 +11,33 @@ Download Repository
 Add Python script
 http://d.hatena.ne.jp/fgshun/20091127/1259302979
 
-    $ curl -O http://www.lazy-moon.jp/soft/qreki_py/qreki-0.4.6.zip
-    $ unzip qreki-0.4.6.zip
-    $ mv qreki-0.4.6 src/qreki_py
-    $ rm qreki-0.4.6.zip
+```
+$ curl -O http://www.lazy-moon.jp/soft/qreki_py/qreki-0.4.6.zip
+$ unzip qreki-0.4.6.zip
+$ mv qreki-0.4.6 src/qreki_py
+$ rm qreki-0.4.6.zip
+```
 
 Add PHP script
 http://d.hatena.ne.jp/babu_babu_baboo/20131129/1385688401
-    $ (copy source code from website)
-    $ pbpaste > src/qreki.php
+
+```
+$ (copy source code from website)
+$ pbpaste > src/qreki.php
+```
 
 Add Ruby script
 https://github.com/ozamasa/qreki
 
-    $ bundle install
+```
+$ bundle install
+```
 
 Compile Swift script
-    $ make
+
+```
+$ make
+```
 
 ## Run
 
